@@ -1,14 +1,28 @@
 import { createCells, createNextGeneration } from './golLogic'
 import { Graphics, useTick } from '@pixi/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 
 export default function Cells({ windowSize }) {
   const [cells, setCells] = useState(createCells(windowSize))
   const cellsGraphics = []
+  const mousePosition = useRef({ x: null, y: null })
 
   useEffect(() => {
     setCells(createCells(windowSize))
   }, [windowSize])
+
+  useEffect(() => {
+    const onMouseMove = (e) => {
+      mousePosition.current = {
+        x: e.clientX,
+        y: e.clientY
+      }
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+    }
+  }, [])
 
   const cellGraphics = useCallback((g, cell) => {
     function cellColor() {
@@ -50,7 +64,7 @@ export default function Cells({ windowSize }) {
     stopwatch += delta
     if (stopwatch > 10) {
       stopwatch = 0
-      setCells(createNextGeneration(cells))
+      setCells(createNextGeneration(cells, mousePosition.current))
     }
   })
 

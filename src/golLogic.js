@@ -32,7 +32,10 @@ export function createCells(windowSize) {
   return cells
 }
 
-export function createNextGeneration(cells) {
+export function createNextGeneration(cells, mousePosition) {
+  let mouseX = mousePosition.x
+  let mouseY = mousePosition.y
+
   const nextGeneration = []
   let rowIndex = 0
   let cellIndex = 0
@@ -58,6 +61,15 @@ export function createNextGeneration(cells) {
           cell.isAliveNextGen = false
         }
       }
+      if (mouseX > cell.x - cell.width && mouseX < cell.x + cell.width * 2) {
+        if (
+          mouseY > cell.y - cell.height &&
+          mouseY < cell.y + cell.height * 2
+        ) {
+          cell.isAliveNextGen = true
+        }
+      }
+
       nextGenerationRow.push(cell)
       cellIndex++
     })
