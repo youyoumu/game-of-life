@@ -1,9 +1,7 @@
-import { TextStyle } from 'pixi.js'
-import { Stage, Container, Sprite, Text } from '@pixi/react'
-import { useState, useEffect } from 'react'
+import { Stage, Graphics } from '@pixi/react'
+import { useState, useEffect, useCallback } from 'react'
 
 export default function App() {
-  const bunnyUrl = 'https://pixijs.io/pixi-react/img/bunny.png'
   const [windowSize, setWindowSize] = useState({
     width: undefined,
     height: undefined
@@ -21,47 +19,36 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const cellGraphics = useCallback(
+    (g, i) => {
+      const height = windowSize.height / 10
+      const widht = height
+
+      g.clear()
+      g.lineStyle(1, 0x000000)
+      g.beginFill(0x8fbdce)
+      g.drawRect(i * widht, 0, widht, height)
+      g.endFill()
+    },
+    [windowSize]
+  )
+
+  function Cells() {
+    const cells = []
+    for (let i = 0; i < 10; i++) {
+      const cell = <Graphics draw={(g) => cellGraphics(g, i)} key={i} />
+      cells.push(cell)
+    }
+    return cells
+  }
+
   return (
     <Stage
       width={windowSize.width}
       height={windowSize.height}
       options={{ background: 0x1099bb }}
     >
-      <Sprite
-        image={bunnyUrl}
-        x={windowSize.width / 2}
-        y={windowSize.height / 2}
-      />
-      <Sprite
-        image={bunnyUrl}
-        x={windowSize.width / 3}
-        y={windowSize.height / 3}
-      />
-      <Sprite
-        image={bunnyUrl}
-        x={windowSize.width / 4}
-        y={windowSize.height / 4}
-      />
-
-      <Container x={windowSize.width / 4} y={windowSize.height / 4}>
-        <Text
-          text="Hello World"
-          anchor={0.5}
-          x={220}
-          y={150}
-          filters={[]}
-          style={
-            new TextStyle({
-              align: 'center',
-              fontSize: 50,
-              letterSpacing: 20,
-              dropShadow: true,
-              dropShadowColor: 0xffffff,
-              dropShadowDistance: 6
-            })
-          }
-        />
-      </Container>
+      <Cells />
     </Stage>
   )
 }
