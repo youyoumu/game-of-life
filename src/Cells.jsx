@@ -13,7 +13,13 @@ export default function Cells({ windowSize }) {
   const cellGraphics = useCallback((g, cell) => {
     function cellColor() {
       if (cell.isAlive) {
-        return 0xa5a5a5
+        if (cell.lifetime === 0) {
+          return 0xe3e3e3
+        } else if (cell.lifetime === 1) {
+          return 0xc2c2c2
+        } else {
+          return 0xa5a5a5
+        }
       } else {
         if (cell.deadtime === 1) {
           return 0xc2c2c2
