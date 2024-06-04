@@ -1,5 +1,6 @@
 import { Stage, Graphics } from '@pixi/react'
 import { useState, useEffect, useCallback } from 'react'
+import createCells from './createCells'
 
 export default function App() {
   const [windowSize, setWindowSize] = useState({
@@ -19,27 +20,29 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const cellGraphics = useCallback(
-    (g, i) => {
-      const height = windowSize.height / 10
-      const widht = height
+  const cellGraphics = useCallback((g, cell) => {
+    const cellColor = cell.isAlive ? 0x000000 : 0xffffff
 
-      g.clear()
-      g.lineStyle(1, 0x000000)
-      g.beginFill(0x8fbdce)
-      g.drawRect(i * widht, 0, widht, height)
-      g.endFill()
-    },
-    [windowSize]
-  )
+    g.clear()
+    g.beginFill(cellColor)
+    g.lineStyle(1, 0x000000)
+    g.drawRect(cell.x, cell.y, cell.width, cell.width)
+    g.endFill()
+  }, [])
 
   function Cells() {
-    const cells = []
-    for (let i = 0; i < 10; i++) {
-      const cell = <Graphics draw={(g) => cellGraphics(g, i)} key={i} />
-      cells.push(cell)
-    }
-    return cells
+    const cells = createCells(windowSize)
+    const cellsGraphics = []
+    cells.map((row) => {
+      row.map((cell) => {
+        const graphics = (
+          <Graphics key={cell.key} draw={(g) => cellGraphics(g, cell)} />
+        )
+        cellsGraphics.push(graphics)
+      })
+    })
+
+    return cellsGraphics
   }
 
   return (
