@@ -11,10 +11,21 @@ export default function Cells({ windowSize }) {
   }, [windowSize])
 
   const cellGraphics = useCallback((g, cell) => {
-    const cellColor = cell.isAlive ? 0x000000 : 0xffffff
+    function cellColor() {
+      if (cell.isAlive) {
+        return 0x888888
+      } else {
+        if (cell.deadtime === 1) {
+          return 0xc2c2c2
+        } else if (cell.deadtime === 2) {
+          return 0xe3e3e3
+        }
+        return 0xffffff
+      }
+    }
     g.clear()
-    g.beginFill(cellColor)
-    g.lineStyle(1, 0x000000)
+    g.beginFill(cellColor())
+    // g.lineStyle(1, 0x000000)
     g.drawRect(cell.x, cell.y, cell.width, cell.width)
     g.endFill()
   }, [])

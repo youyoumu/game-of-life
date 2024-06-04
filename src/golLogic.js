@@ -3,14 +3,15 @@ class Cell {
     this.x = x
     this.y = y
     this.width = width
-    this.isAlive = Math.random() > 0.5
+    this.isAlive = Math.random() > 0.9
     this.key = `${this.x}-${this.y}`
     this.lifetime = 0
+    this.deadtime = 0
   }
 }
 
 export function createCells(windowSize) {
-  const cellWidth = windowSize.height / 10
+  const cellWidth = windowSize.height / 50
   const vCount = windowSize.height / cellWidth
   const hCount = windowSize.width / cellWidth
   const cells = []
@@ -37,18 +38,18 @@ export function createNextGeneration(cells) {
       const liveNeighbors = countLiveNeighbors(cells, rowIndex, cellIndex)
       const oldNeighbors = countOldNeighbours(cells, rowIndex, cellIndex)
       if (cell.isAlive) {
-        if (liveNeighbors < 2) {
-          cell.isAlive = false
-          cell.lifetime = 0
-        } else if (liveNeighbors > 3) {
-          cell.isAlive = false
-          cell.lifetime = 0
-        } else {
+        if (liveNeighbors === 2 || liveNeighbors === 3) {
           cell.lifetime++
+        } else if (liveNeighbors > 3 || liveNeighbors < 2) {
+          cell.isAlive = false
+          cell.lifetime = 0
         }
       } else {
         if (liveNeighbors === 3 || oldNeighbors > 0) {
           cell.isAlive = true
+          cell.deadtime = 0
+        } else {
+          cell.deadtime++
         }
       }
       nextGenerationRow.push(cell)
@@ -84,7 +85,7 @@ function countOldNeighbours(cells, rowIndex, cellIndex) {
   return neighbourCellsMap.reduce((numNeighbours, [dx, dy]) => {
     return (
       numNeighbours +
-      (cells[rowIndex + dy]?.[cellIndex + dx]?.lifetime > 10 ? 1 : 0)
+      (cells[rowIndex + dy]?.[cellIndex + dx]?.lifetime > 100 ? 1 : 0)
     )
   }, 0)
 }
