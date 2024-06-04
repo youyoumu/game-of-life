@@ -1,15 +1,49 @@
 import { TextStyle } from 'pixi.js'
 import { Stage, Container, Sprite, Text } from '@pixi/react'
+import { useState, useEffect } from 'react'
 
 export default function App() {
   const bunnyUrl = 'https://pixijs.io/pixi-react/img/bunny.png'
-  return (
-    <Stage x={800} y={600} options={{ background: 0x1099bb }}>
-      <Sprite image={bunnyUrl} x={300} y={150} />
-      <Sprite image={bunnyUrl} x={500} y={150} />
-      <Sprite image={bunnyUrl} x={400} y={200} />
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined
+  })
 
-      <Container x={200} y={200}>
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
+    window.addEventListener('resize', handleResize)
+    handleResize()
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return (
+    <Stage
+      width={windowSize.width}
+      height={windowSize.height}
+      options={{ background: 0x1099bb }}
+    >
+      <Sprite
+        image={bunnyUrl}
+        x={windowSize.width / 2}
+        y={windowSize.height / 2}
+      />
+      <Sprite
+        image={bunnyUrl}
+        x={windowSize.width / 3}
+        y={windowSize.height / 3}
+      />
+      <Sprite
+        image={bunnyUrl}
+        x={windowSize.width / 4}
+        y={windowSize.height / 4}
+      />
+
+      <Container x={windowSize.width / 4} y={windowSize.height / 4}>
         <Text
           text="Hello World"
           anchor={0.5}
