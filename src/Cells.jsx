@@ -32,7 +32,7 @@ export default function Cells({ windowSize }) {
     g.clear()
     g.beginFill(cellColor())
     // g.lineStyle(1, 0x000000)
-    g.drawRect(cell.x, cell.y, cell.width, cell.width)
+    g.drawRect(cell.x, cell.y, cell.width, cell.height)
     g.endFill()
   }, [])
 

@@ -1,8 +1,9 @@
 class Cell {
-  constructor(x, y, width) {
+  constructor(x, y, width, height) {
     this.x = x
     this.y = y
     this.width = width
+    this.height = height
     this.isAlive = Math.random() > 0.9
     this.key = `${this.x}-${this.y}`
     this.lifetime = 0
@@ -12,16 +13,18 @@ class Cell {
 }
 
 export function createCells(windowSize) {
-  const cellWidth = windowSize.height / 40
-  const vCount = windowSize.height / cellWidth
-  const hCount = windowSize.width / cellWidth
+  const cellHeight = windowSize.height / 40
+  const vCount = windowSize.height / cellHeight
+  const hCount =
+    windowSize.width / cellHeight > 80 ? 80 : windowSize.width / cellHeight
+  const cellWidth = windowSize.width / hCount
   const cells = []
   for (let i = 0; i < vCount; i++) {
     const row = []
-    const y = i * cellWidth
+    const y = i * cellHeight
     for (let j = 0; j < hCount; j++) {
       const x = j * cellWidth
-      const cell = new Cell(x, y, cellWidth)
+      const cell = new Cell(x, y, cellWidth, cellHeight)
       row.push(cell)
     }
     cells.push(row)
