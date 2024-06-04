@@ -13,7 +13,7 @@ export default function Cells({ windowSize }) {
   const cellGraphics = useCallback((g, cell) => {
     function cellColor() {
       if (cell.isAlive) {
-        return 0x888888
+        return 0xa5a5a5
       } else {
         if (cell.deadtime === 1) {
           return 0xc2c2c2
@@ -42,7 +42,7 @@ export default function Cells({ windowSize }) {
   let stopwatch = 0
   useTick((delta) => {
     stopwatch += delta
-    if (stopwatch > 1) {
+    if (stopwatch > 10) {
       stopwatch = 0
       setCells(createNextGeneration(cells))
     }
