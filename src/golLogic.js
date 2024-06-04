@@ -12,7 +12,6 @@ export function createCells(windowSize) {
   const cellWidth = windowSize.height / 10
   const vCount = windowSize.height / cellWidth
   const hCount = windowSize.width / cellWidth
-
   const cells = []
   for (let i = 0; i < vCount; i++) {
     const row = []
@@ -24,8 +23,52 @@ export function createCells(windowSize) {
     }
     cells.push(row)
   }
-
-  console.log(cells)
-
   return cells
+}
+
+export function createNextGeneration(cells) {
+  const nextGeneration = []
+  let rowIndex = 0
+  let cellIndex = 0
+  cells.forEach((row) => {
+    const nextGenerationRow = []
+    row.forEach((cell) => {
+      const liveNeighbors = countLiveNeighbors(cells, rowIndex, cellIndex)
+      if (cell.isAlive) {
+        if (liveNeighbors < 2) {
+          cell.isAlive = false
+        } else if (liveNeighbors > 3) {
+          cell.isAlive = false
+        }
+      } else {
+        if (liveNeighbors === 3) {
+          cell.isAlive = true
+        }
+      }
+      nextGenerationRow.push(cell)
+      cellIndex++
+    })
+    nextGeneration.push(nextGenerationRow)
+    rowIndex++
+    cellIndex = 0
+  })
+  return nextGeneration
+}
+
+function countLiveNeighbors(cells, rowIndex, cellIndex) {
+  const neighbourCellsMap = [
+    [-1, -1],
+    [0, -1],
+    [1, -1],
+    [-1, 0],
+    [1, 0],
+    [-1, 1],
+    [0, 1],
+    [1, 1]
+  ]
+  return neighbourCellsMap.reduce((numNeighbours, [dx, dy]) => {
+    return (
+      numNeighbours + (cells[rowIndex + dy]?.[cellIndex + dx]?.isAlive ? 1 : 0)
+    )
+  }, 0)
 }

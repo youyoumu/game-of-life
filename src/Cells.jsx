@@ -1,4 +1,4 @@
-import { createCells } from './golLogic'
+import { createCells, createNextGeneration } from './golLogic'
 import { Graphics, useTick } from '@pixi/react'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -31,9 +31,9 @@ export default function Cells({ windowSize }) {
   let stopwatch = 0
   useTick((delta) => {
     stopwatch += delta
-    if (stopwatch > 60) {
+    if (stopwatch > 5) {
       stopwatch = 0
-      setCells(createCells(windowSize))
+      setCells(createNextGeneration(cells))
     }
   })
 
