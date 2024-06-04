@@ -24,7 +24,7 @@ export default function App() {
     <Stage
       width={windowSize.width}
       height={windowSize.height}
-      options={{ background: 0x1099bb }}
+      options={{ background: 0xffffff, antialias: true }}
     >
       <Cells windowSize={windowSize} />
     </Stage>

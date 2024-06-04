@@ -46,7 +46,13 @@ export default function Cells({ windowSize }) {
     g.clear()
     g.beginFill(cellColor())
     // g.lineStyle(1, 0x000000)
-    g.drawRect(cell.x, cell.y, cell.width, cell.height)
+    g.drawRoundedRect(
+      cell.x,
+      cell.y,
+      cell.width - cell.width / 4,
+      cell.height - cell.height / 4,
+      10
+    )
     g.endFill()
   }, [])
 
