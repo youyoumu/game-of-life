@@ -8,7 +8,7 @@ class Cell {
   }
 }
 
-export default function createCells(windowSize) {
+export function createCells(windowSize) {
   const cellWidth = windowSize.height / 10
   const vCount = windowSize.height / cellWidth
   const hCount = windowSize.width / cellWidth

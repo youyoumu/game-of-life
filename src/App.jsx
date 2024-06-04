@@ -1,6 +1,6 @@
 import { Stage, Graphics } from '@pixi/react'
 import { useState, useEffect, useCallback } from 'react'
-import createCells from './createCells'
+import { createCells } from './golLogic'
 
 export default function App() {
   const [windowSize, setWindowSize] = useState({
