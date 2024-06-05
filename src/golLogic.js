@@ -16,7 +16,7 @@ export function createCells(windowSize) {
   const cellHeight = windowSize.height / 40
   const vCount = windowSize.height / cellHeight
   const hCount =
-    windowSize.width / cellHeight > 200 ? 200 : windowSize.width / cellHeight
+    windowSize.width / cellHeight > 80 ? 80 : windowSize.width / cellHeight
   const cellWidth = windowSize.width / hCount
   const cells = []
   for (let i = 0; i < vCount; i++) {
@@ -32,10 +32,7 @@ export function createCells(windowSize) {
   return cells
 }
 
-let tickSum = 0
-let tickCount = 0
 export function createNextGeneration(cells, mousePosition) {
-  const tick = performance.now()
   let mouseX = mousePosition.x
   let mouseY = mousePosition.y
 
@@ -82,12 +79,6 @@ export function createNextGeneration(cells, mousePosition) {
       cell.isAliveNextGen = false
     }
   }
-
-  const tock = performance.now()
-  const elapsed = tock - tick
-  tickSum += elapsed
-  tickCount++
-  // if (tickCount % 60 === 0) console.log(tickSum / tickCount, tickCount)
   return cells
 }
 

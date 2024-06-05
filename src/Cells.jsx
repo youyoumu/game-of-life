@@ -44,7 +44,6 @@ export default function Cells({ windowSize }) {
   }
 
   const cellGraphics = useCallback((g, cells) => {
-    const tick = performance.now()
     const cellsLength = cells.length
     if (cellsLength === 0) return
     g.clear()
@@ -64,13 +63,12 @@ export default function Cells({ windowSize }) {
         g.endFill()
       }
     }
-    console.log(performance.now() - tick)
   }, [])
 
   let stopwatch = 0
   useTick((delta) => {
     stopwatch += delta
-    if (stopwatch > 1) {
+    if (stopwatch > 5) {
       stopwatch = 0
       setCells(createNextGeneration(cells, mousePosition.current))
       setTick(tick + 1)
