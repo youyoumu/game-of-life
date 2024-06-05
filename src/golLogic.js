@@ -16,7 +16,7 @@ export function createCells(windowSize) {
   const cellHeight = windowSize.height / 40
   const vCount = windowSize.height / cellHeight
   const hCount =
-    windowSize.width / cellHeight > 80 ? 80 : windowSize.width / cellHeight
+    windowSize.width / cellHeight > 200 ? 200 : windowSize.width / cellHeight
   const cellWidth = windowSize.width / hCount
   const cells = []
   for (let i = 0; i < vCount; i++) {
@@ -32,18 +32,22 @@ export function createCells(windowSize) {
   return cells
 }
 
+let tickSum = 0
+let tickCount = 0
 export function createNextGeneration(cells, mousePosition) {
+  const tick = performance.now()
   let mouseX = mousePosition.x
   let mouseY = mousePosition.y
-
   const nextGeneration = []
-  let rowIndex = 0
-  let cellIndex = 0
-  cells.forEach((row) => {
-    const nextGenerationRow = []
-    row.forEach((cell) => {
-      const liveNeighbors = countLiveNeighbors(cells, rowIndex, cellIndex)
-      const oldNeighbors = countOldNeighbours(cells, rowIndex, cellIndex)
+
+  const cellsLength = cells.length
+  for (let i = 0; i < cellsLength; i++) {
+    const row = []
+    const rowLength = cells[i].length
+    for (let j = 0; j < rowLength; j++) {
+      const cell = cells[i][j]
+      const liveNeighbors = countLiveNeighbors(cells, i, j)
+      const oldNeighbors = countOldNeighbours(cells, i, j)
       if (cell.isAlive) {
         if (liveNeighbors === 2 || liveNeighbors === 3) {
           cell.lifetime++
@@ -69,21 +73,25 @@ export function createNextGeneration(cells, mousePosition) {
           cell.isAliveNextGen = true
         }
       }
+      row.push(cell)
+    }
+    nextGeneration.push(row)
+  }
 
-      nextGenerationRow.push(cell)
-      cellIndex++
-    })
-    nextGeneration.push(nextGenerationRow)
-    rowIndex++
-    cellIndex = 0
-  })
-
-  cells.forEach((row) => {
-    row.forEach((cell) => {
+  for (let i = 0; i < cellsLength; i++) {
+    const rowLength = cells[i].length
+    for (let j = 0; j < rowLength; j++) {
+      const cell = cells[i][j]
       cell.isAlive = cell.isAliveNextGen
       cell.isAliveNextGen = false
-    })
-  })
+    }
+  }
+
+  const tock = performance.now()
+  const elapsed = tock - tick
+  tickSum += elapsed
+  tickCount++
+  if (tickCount % 60 === 0) console.log(tickSum / tickCount, tickCount)
   return nextGeneration
 }
 
