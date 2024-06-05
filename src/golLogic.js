@@ -38,11 +38,9 @@ export function createNextGeneration(cells, mousePosition) {
   const tick = performance.now()
   let mouseX = mousePosition.x
   let mouseY = mousePosition.y
-  const nextGeneration = []
 
   const cellsLength = cells.length
   for (let i = 0; i < cellsLength; i++) {
-    const row = []
     const rowLength = cells[i].length
     for (let j = 0; j < rowLength; j++) {
       const cell = cells[i][j]
@@ -73,9 +71,7 @@ export function createNextGeneration(cells, mousePosition) {
           cell.isAliveNextGen = true
         }
       }
-      row.push(cell)
     }
-    nextGeneration.push(row)
   }
 
   for (let i = 0; i < cellsLength; i++) {
@@ -92,7 +88,7 @@ export function createNextGeneration(cells, mousePosition) {
   tickSum += elapsed
   tickCount++
   if (tickCount % 60 === 0) console.log(tickSum / tickCount, tickCount)
-  return nextGeneration
+  return cells
 }
 
 const neighbourCellsMap = [

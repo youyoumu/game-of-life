@@ -6,6 +6,7 @@ export default function Cells({ windowSize }) {
   const [cells, setCells] = useState(createCells(windowSize))
   const cellsGraphics = []
   const mousePosition = useRef({ x: null, y: null })
+  const [tick, setTick] = useState(0)
 
   useEffect(() => {
     setCells(createCells(windowSize))
@@ -71,6 +72,7 @@ export default function Cells({ windowSize }) {
     if (stopwatch > 1) {
       stopwatch = 0
       setCells(createNextGeneration(cells, mousePosition.current))
+      setTick(tick + 1)
     }
   })
 
