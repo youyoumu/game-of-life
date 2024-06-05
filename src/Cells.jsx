@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState, useRef } from 'react'
 
 export default function Cells({ windowSize }) {
   const [cells, setCells] = useState(createCells(windowSize))
-  const cellsGraphics = []
   const mousePosition = useRef({ x: null, y: null })
   const [tick, setTick] = useState(0)
 
@@ -25,46 +24,48 @@ export default function Cells({ windowSize }) {
     }
   }, [])
 
-  const cellGraphics = useCallback((g, cell) => {
-    function cellColor() {
-      if (cell.isAlive) {
-        if (cell.lifetime === 0) {
-          return 0xe3e3e3
-        } else if (cell.lifetime === 1) {
-          return 0xc2c2c2
-        } else {
-          return 0xa5a5a5
-        }
+  function cellColor(cell) {
+    if (cell.isAlive) {
+      if (cell.lifetime === 0) {
+        return 0xe3e3e3
+      } else if (cell.lifetime === 1) {
+        return 0xc2c2c2
       } else {
-        if (cell.deadtime === 1) {
-          return 0xc2c2c2
-        } else if (cell.deadtime === 2) {
-          return 0xe3e3e3
-        }
-        return 0xffffff
+        return 0xa5a5a5
+      }
+    } else {
+      if (cell.deadtime === 1) {
+        return 0xc2c2c2
+      } else if (cell.deadtime === 2) {
+        return 0xe3e3e3
+      }
+      return 0xffffff
+    }
+  }
+
+  const cellGraphics = useCallback((g, cells) => {
+    const tick = performance.now()
+    const cellsLength = cells.length
+    if (cellsLength === 0) return
+    g.clear()
+
+    for (let i = 0; i < cellsLength; i++) {
+      const rowLength = cells[i].length
+      for (let j = 0; j < rowLength; j++) {
+        const cell = cells[i][j]
+        g.beginFill(cellColor(cell))
+        g.drawRoundedRect(
+          cell.x,
+          cell.y,
+          cell.width - cell.width / 4,
+          cell.height - cell.height / 4,
+          10
+        )
+        g.endFill()
       }
     }
-    g.clear()
-    g.beginFill(cellColor())
-    // g.lineStyle(1, 0x000000)
-    g.drawRoundedRect(
-      cell.x,
-      cell.y,
-      cell.width - cell.width / 4,
-      cell.height - cell.height / 4,
-      10
-    )
-    g.endFill()
+    console.log(performance.now() - tick)
   }, [])
-
-  cells.forEach((row) => {
-    row.forEach((cell) => {
-      const graphics = (
-        <Graphics key={cell.key} draw={(g) => cellGraphics(g, cell)} />
-      )
-      cellsGraphics.push(graphics)
-    })
-  })
 
   let stopwatch = 0
   useTick((delta) => {
@@ -76,5 +77,5 @@ export default function Cells({ windowSize }) {
     }
   })
 
-  return cellsGraphics
+  return <Graphics draw={(g) => cellGraphics(g, cells)} />
 }

@@ -87,7 +87,7 @@ export function createNextGeneration(cells, mousePosition) {
   const elapsed = tock - tick
   tickSum += elapsed
   tickCount++
-  if (tickCount % 60 === 0) console.log(tickSum / tickCount, tickCount)
+  // if (tickCount % 60 === 0) console.log(tickSum / tickCount, tickCount)
   return cells
 }
 
