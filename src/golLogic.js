@@ -42,7 +42,6 @@ export function createNextGeneration(cells, mousePosition) {
     for (let j = 0; j < rowLength; j++) {
       const cell = cells[i][j]
       const liveNeighbors = countLiveNeighbors(cells, i, j)
-      const oldNeighbors = countOldNeighbours(cells, i, j)
       if (cell.isAlive) {
         if (liveNeighbors === 2 || liveNeighbors === 3) {
           cell.lifetime++
@@ -52,6 +51,7 @@ export function createNextGeneration(cells, mousePosition) {
           cell.lifetime = 0
         }
       } else {
+        const oldNeighbors = countOldNeighbors(cells, i, j)
         if (liveNeighbors === 3 || oldNeighbors > 0) {
           cell.isAliveNextGen = true
           cell.deadtime = 0
@@ -82,7 +82,7 @@ export function createNextGeneration(cells, mousePosition) {
   return cells
 }
 
-const neighbourCellsMap = [
+const neighborCellsMap = [
   [-1, -1],
   [0, -1],
   [1, -1],
@@ -94,17 +94,17 @@ const neighbourCellsMap = [
 ]
 
 function countLiveNeighbors(cells, rowIndex, cellIndex) {
-  return neighbourCellsMap.reduce((numNeighbours, [dx, dy]) => {
+  return neighborCellsMap.reduce((numNeighbors, [dx, dy]) => {
     return (
-      numNeighbours + (cells[rowIndex + dy]?.[cellIndex + dx]?.isAlive ? 1 : 0)
+      numNeighbors + (cells[rowIndex + dy]?.[cellIndex + dx]?.isAlive ? 1 : 0)
     )
   }, 0)
 }
 
-function countOldNeighbours(cells, rowIndex, cellIndex) {
-  return neighbourCellsMap.reduce((numNeighbours, [dx, dy]) => {
+function countOldNeighbors(cells, rowIndex, cellIndex) {
+  return neighborCellsMap.reduce((numNeighbors, [dx, dy]) => {
     return (
-      numNeighbours +
+      numNeighbors +
       (cells[rowIndex + dy]?.[cellIndex + dx]?.lifetime > 20 ? 1 : 0)
     )
   }, 0)

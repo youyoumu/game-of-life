@@ -52,6 +52,9 @@ export default function Cells({ windowSize }) {
       const rowLength = cells[i].length
       for (let j = 0; j < rowLength; j++) {
         const cell = cells[i][j]
+        if (cell.deadtime > 2) {
+          continue
+        }
         g.beginFill(cellColor(cell))
         g.drawRoundedRect(
           cell.x,
